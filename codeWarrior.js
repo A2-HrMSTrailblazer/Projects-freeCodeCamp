@@ -13,7 +13,7 @@ const proportionalSize = size => {
     return innerHeight < 500 ? Math.ceil((size / 500) * innerHeight) : size;
 };
 
-class Player{
+class Player {
     constructor(){
         this.position = {
             x: proportionalSize(10),
@@ -54,6 +54,14 @@ class Player{
         if(this.position.x >= canvas.width - this.width * 2){
             this.position.x = canvas.width - this.width * 2;
         }
+    }
+}
+
+class Platform {
+    constructor(x, y){
+        this.position = {x, y};
+        this.width = 200;
+        this.height = proportionalSize(40);
     }
 }
 
