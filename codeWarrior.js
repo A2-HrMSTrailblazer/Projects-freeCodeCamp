@@ -123,7 +123,7 @@ const movePlayer = (key, xVelocity, isPressed) => {
 const startGame = () => {
     canvas.style.display = 'block';
     startScreen.style.display = 'none';
-    player.draw();
+    animate();
 }
 
 startBtn.addEventListener('click', startGame);
