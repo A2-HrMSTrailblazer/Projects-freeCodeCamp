@@ -24,7 +24,14 @@ rulesBtn.addEventListener("click", () => {
 });
 
 rollDiceBtn.addEventListener("click", () => {
-    rollDice();
+    if (rolls < 3){
+        rolls++;
+        rollsElement.innerText = rolls;
+        rollDice();
+    }
+    else {
+        alert("You have already rolled 3 times this round.");
+    }
 });
 
 const rollDice = () => {
