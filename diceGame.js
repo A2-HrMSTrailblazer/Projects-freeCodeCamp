@@ -43,6 +43,14 @@ keepScoreBtn.addEventListener("click", () => {
         let achieved = selected.id;
         updateScore(selectedValue, achieved);
 
+        // check if 6 rounds have been played
+        // if so, show alert with user's final score after 500 milliseconds
+        if (round === 6) {
+            setTimeout(() => {
+                alert(`Game over! Your final score is ${score}`);
+            }, 500);
+        }
+
         scoreInputs.forEach((input, index) => {
             input.checked = false;
             input.disabled = true;
