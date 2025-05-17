@@ -57,6 +57,17 @@ const updateStats = () => {
     totalScoreElement.innerText = score;
 };
 
+const updateScore = (selectedValue, achieved) => {
+    const value = parseInt(selectedValue);
+
+    score += value;
+    totalScoreElement.innerText = score;
+
+    const historyItem = document.createElement("li");
+    historyItem.innerText = `${achieved} : ${value}`;
+    scoreHistory.appendChild(historyItem);
+};
+
 const getHighestDuplicates = array => {
     let count = [0, 0, 0, 0, 0, 0];
 
