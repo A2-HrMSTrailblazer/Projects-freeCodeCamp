@@ -36,6 +36,27 @@ rollDiceBtn.addEventListener("click", () => {
     }
 });
 
+keepScoreBtn.addEventListener("click", () => {
+    let selected = document.querySelector("#score-options input:checked");
+    if (selected) {
+        let selectedValue  = selected.value;
+        let achieved = selected.id;
+        updateScore(selectedValue, achieved);
+
+        scoreInputs.forEach((input, index) => {
+            input.checked = false;
+            input.disabled = true;
+            scoreSpans[index].innerText = "";
+        });
+        rolls = 0;
+        round++;
+        updateStats();
+    }
+    else {
+        alert("Please select a score option.");
+    }
+});
+
 const rollDice = () => {
     diceValuesArr = [];
 
