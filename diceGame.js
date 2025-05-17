@@ -32,6 +32,7 @@ rollDiceBtn.addEventListener("click", () => {
         getHighestDuplicates(diceValuesArr);
         detectFullHouse(diceValuesArr);
         checkForStraights(diceValuesArr);
+        enableLastRadioOption();
     }
     else {
         alert("You have already rolled 3 times this round.");
@@ -112,7 +113,6 @@ const getHighestDuplicates = array => {
     if (Math.max(...count) >= 4) {
         updateRadioOption(1, array.reduce((a, b) => a + b, 0));
     }
-    updateRadioOption(5, 0);
 };
 
 // function to detect full house
@@ -126,7 +126,6 @@ const detectFullHouse = array => {
     if (count.includes(3) && count.includes(2)) {
         updateRadioOption(2, 25);
     }
-    updateRadioOption(5, 0);
 };
 
 // function to check for straights
@@ -148,7 +147,15 @@ const checkForStraights = array => {
         (count[1] && count[2] && count[3] && count[4] && count[5])) {
         updateRadioOption(4, 40);
     }
-    updateRadioOption(5, 0);
+};
+
+// refactoring the code for enabling last radio button
+// function to enable the last radio button
+const enableLastRadioOption = () => {
+    scoreInputs[5].checked = true;
+    scoreInputs[5].disabled = false;
+    scoreInputs[5].value = 0;
+    scoreSpans[5].innerText = ", score = 0";
 };
 
 const updateRadioOption = (index, score) => {
