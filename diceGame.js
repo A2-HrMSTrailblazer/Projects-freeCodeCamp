@@ -16,3 +16,9 @@ let diceValuesArr = [];
 let rolls = 0;
 let round = 1;
 let score = 0;
+
+rulesBtn.addEventListener("click", () => {
+    isModalShowing = !isModalShowing;
+    rulesContainer.style.display = isModalShowing ? "block" : "none";
+    rulesBtn.innerText = isModalShowing ? "Hide rules" : "Show rules";
+});
