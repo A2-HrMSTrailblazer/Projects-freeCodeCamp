@@ -54,3 +54,10 @@ const updateStats = () => {
     rollsElement.innerText = rolls;
     totalScoreElement.innerText = score;
 };
+
+const updateRadioOption = (index, score) => {
+    scoreInputs[index].checked = true;
+    scoreInputs[index].disabled = false;
+    scoreInputs[index].value = score;
+    scoreSpans[index].innerText = `, score = ${score}`;
+};
