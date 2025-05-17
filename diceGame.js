@@ -57,13 +57,6 @@ const updateStats = () => {
     totalScoreElement.innerText = score;
 };
 
-const updateRadioOption = (index, score) => {
-    scoreInputs[index].checked = true;
-    scoreInputs[index].disabled = false;
-    scoreInputs[index].value = score;
-    scoreSpans[index].innerText = `, score = ${score}`;
-};
-
 const getHighestDuplicates = array => {
     let count = [0, 0, 0, 0, 0, 0];
 
@@ -77,6 +70,13 @@ const getHighestDuplicates = array => {
         updateRadioOption(1, array.reduce((a, b) => a + b, 0));
     }
     updateRadioOption(5, 0);
+};
+
+const updateRadioOption = (index, score) => {
+    scoreInputs[index].checked = true;
+    scoreInputs[index].disabled = false;
+    scoreInputs[index].value = score;
+    scoreSpans[index].innerText = `, score = ${score}`;
 };
 
 const resetRadioOptions = () => {
