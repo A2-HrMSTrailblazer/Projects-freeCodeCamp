@@ -25,6 +25,7 @@ rulesBtn.addEventListener("click", () => {
 
 rollDiceBtn.addEventListener("click", () => {
     if (rolls < 3){
+        resetRadioOptions();
         rolls++;
         rollDice();
         updateStats();
@@ -76,4 +77,15 @@ const getHighestDuplicates = array => {
         updateRadioOption(1, array.reduce((a, b) => a + b, 0));
     }
     updateRadioOption(5, 0);
+};
+
+const resetRadioOptions = () => {
+    scoreInputs.forEach(input => {
+        input.checked = false;
+        input.disabled = true;
+        input.value = 0;
+    });
+    scoreSpans.forEach(span => {
+        span.innerText = "";
+    });
 };
