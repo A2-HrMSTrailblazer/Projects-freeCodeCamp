@@ -24,6 +24,10 @@ rulesBtn.addEventListener("click", () => {
 });
 
 rollDiceBtn.addEventListener("click", () => {
+    rollDice();
+});
+
+const rollDice = () => {
     diceValuesArr = [];
 
     for (let i = 0; i < listOfAllDice.length; i++) {
@@ -36,4 +40,4 @@ rollDiceBtn.addEventListener("click", () => {
     listOfAllDice.forEach((die, index) => {
         die.innerText = diceValuesArr[index];
     });
-});
+};
