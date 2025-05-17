@@ -22,3 +22,18 @@ rulesBtn.addEventListener("click", () => {
     rulesContainer.style.display = isModalShowing ? "block" : "none";
     rulesBtn.innerText = isModalShowing ? "Hide rules" : "Show rules";
 });
+
+rollDiceBtn.addEventListener("click", () => {
+    diceValuesArr = [];
+
+    for (let i = 0; i < listOfAllDice.length; i++) {
+        let randomValue = Math.floor(Math.random() * 6) + 1;
+        listOfAllDice[i].innerText = randomValue;
+        listOfAllDice[i].classList.remove("selected");
+        diceValuesArr.push(randomValue);
+    }
+
+    listOfAllDice.forEach((die, index) => {
+        die.innerText = diceValuesArr[index];
+    });
+});
