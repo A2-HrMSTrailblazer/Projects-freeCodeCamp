@@ -49,6 +49,7 @@ keepScoreBtn.addEventListener("click", () => {
             setTimeout(() => {
                 alert(`Game over! Your final score is ${score}`);
             }, 500);
+            resetGame();
         }
 
         scoreInputs.forEach((input, index) => {
@@ -128,4 +129,22 @@ const resetRadioOptions = () => {
     scoreSpans.forEach(span => {
         span.innerText = "";
     });
+};
+
+// declaring resetGame function to reset all the variables
+const resetGame = () => {
+    rolls = 0;
+    round = 1;
+    score = 0;
+    scoreHistory.innerHTML = "";
+    totalScoreElement.innerText = score;
+    roundElement.innerText = round;
+    rollsElement.innerText = rolls;
+
+    listOfAllDice.forEach(die => {
+        die.innerText = 0;
+        die.classList.remove("selected");
+    });
+
+    resetRadioOptions();
 };
