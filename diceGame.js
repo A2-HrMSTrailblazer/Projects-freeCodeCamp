@@ -26,8 +26,8 @@ rulesBtn.addEventListener("click", () => {
 rollDiceBtn.addEventListener("click", () => {
     if (rolls < 3){
         rolls++;
-        rollsElement.innerText = rolls;
         rollDice();
+        updateStats();
     }
     else {
         alert("You have already rolled 3 times this round.");
@@ -47,4 +47,10 @@ const rollDice = () => {
     listOfAllDice.forEach((die, index) => {
         die.innerText = diceValuesArr[index];
     });
+};
+
+const updateStats = () => {
+    roundElement.innerText = round;
+    rollsElement.innerText = rolls;
+    totalScoreElement.innerText = score;
 };
