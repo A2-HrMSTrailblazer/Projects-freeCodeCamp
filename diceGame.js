@@ -30,6 +30,8 @@ rollDiceBtn.addEventListener("click", () => {
         rollDice();
         updateStats();
         getHighestDuplicates(diceValuesArr);
+        detectFullHouse(diceValuesArr);
+        checkForStraight(diceValuesArr);
     }
     else {
         alert("You have already rolled 3 times this round.");
@@ -112,6 +114,22 @@ const getHighestDuplicates = array => {
     }
     updateRadioOption(5, 0);
 };
+
+// function to detect full house
+const detectFullHouse = array => {
+    let count = [0, 0, 0, 0, 0, 0];
+
+    array.forEach(num => {
+        count[num - 1]++;
+    });
+
+    if (count.includes(3) && count.includes(2)) {
+        updateRadioOption(2, 25);
+    }
+    updateRadioOption(5, 0);
+};
+
+
 
 const updateRadioOption = (index, score) => {
     scoreInputs[index].checked = true;
