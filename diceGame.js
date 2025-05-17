@@ -31,7 +31,7 @@ rollDiceBtn.addEventListener("click", () => {
         updateStats();
         getHighestDuplicates(diceValuesArr);
         detectFullHouse(diceValuesArr);
-        checkForStraight(diceValuesArr);
+        checkForStraights(diceValuesArr);
     }
     else {
         alert("You have already rolled 3 times this round.");
@@ -129,7 +129,27 @@ const detectFullHouse = array => {
     updateRadioOption(5, 0);
 };
 
+// function to check for straights
+const checkForStraights = array => {
+    let count = [0, 0, 0, 0, 0, 0];
 
+    array.forEach(num => {
+        count[num - 1]++;
+    });
+
+    // Check for small straight (4 consecutive numbers)
+    if ((count[0] && count[1] && count[2] && count[3]) ||
+        (count[1] && count[2] && count[3] && count[4]) ||
+        (count[2] && count[3] && count[4] && count[5])) {
+        updateRadioOption(3, 30);
+    }
+    // Check for large straight (5 consecutive numbers)
+    if ((count[0] && count[1] && count[2] && count[3] && count[4]) ||
+        (count[1] && count[2] && count[3] && count[4] && count[5])) {
+        updateRadioOption(4, 40);
+    }
+    updateRadioOption(5, 0);
+};
 
 const updateRadioOption = (index, score) => {
     scoreInputs[index].checked = true;
