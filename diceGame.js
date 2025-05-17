@@ -28,6 +28,7 @@ rollDiceBtn.addEventListener("click", () => {
         rolls++;
         rollDice();
         updateStats();
+        getHighestDuplicates(diceValuesArr);
     }
     else {
         alert("You have already rolled 3 times this round.");
@@ -60,4 +61,19 @@ const updateRadioOption = (index, score) => {
     scoreInputs[index].disabled = false;
     scoreInputs[index].value = score;
     scoreSpans[index].innerText = `, score = ${score}`;
+};
+
+const getHighestDuplicates = array => {
+    let count = [0, 0, 0, 0, 0, 0];
+
+    array.forEach(num => {
+        count[num - 1]++;
+    });
+    if (Math.max(...count) >= 3) {
+        updateRadioOption(0, array.reduce((a, b) => a + b, 0));
+    }
+    if (Math.max(...count) >= 4) {
+        updateRadioOption(1, array.reduce((a, b) => a + b, 0));
+    }
+    updateRadioOption(5, 0);
 };
