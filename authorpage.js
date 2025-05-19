@@ -28,7 +28,8 @@ const displayAuthors = authors => {
             <div id=${index} class="user-card">
                 <h2 class="author-name">${author}</h2>
                 <img src="${image}" class="user-img" alt="${author} avatar"/>
-                <p class="bio">${bio}</p>
+                <div class="purple-divider"></div>
+                <p class="bio">${bio.length > 50 ? bio.slice(0, 50)+'...' : bio}</p>
                 <a href=${url} class="author-link" target="_blank">${author}'s author page</a>
             </div>
         `;
