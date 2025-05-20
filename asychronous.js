@@ -55,6 +55,19 @@ const viewCount = views => {
     return (views >= 1000) ? `${Math.floor(views / 1000)}k` : views;
 };
 
+// function to get the avatar
+const avatars = (posters, users) => {
+    return posters.map(poster => {
+        const user = users.find(user => user.id === poster.user_id);
+        if (user){
+            const avatar = user.avatar_template.replace(/{size}/, 30);
+            // create userAvatarUrl variable with ternary operator to check if avatar starts with "/user_avatar/"
+            const userAvatarUrl = avatar.startsWith("/user_avatar/") ? avatarUrl.concat(avatar) : avatar;
+            return `<img src="${userAvatarUrl}" alt="${user.name}"/>`;
+        }
+    }).join("");
+};
+
 // async function to fetch data from the API
 const fetchData = async () => {
     try{
