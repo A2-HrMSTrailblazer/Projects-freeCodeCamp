@@ -17,3 +17,6 @@ const fetchData = async () => {
 };
 
 fetchData();
+
+// function to display data on page
+const showLatestPosts = data => {};
