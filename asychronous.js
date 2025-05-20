@@ -5,6 +5,20 @@ const forumCategoryUrl = "https://forum.freecodecamp.org/c/";
 const avatarUrl = "https://sea1.discourse-cdn.com/freecodecamp";
 const postsContainer = document.getElementById("posts-container");
 
+// time function
+const timeAgo = time => {
+    const currentTime = new Date();
+    const lastPost = new Date(time);
+    
+    const minutes = Math.floor((currentTime - lastPost) / 60000);
+    const hours = Math.floor((currentTime - lastPost) / 3600000);
+    const days = Math.floor((currentTime - lastPost) / 86400000);
+
+    if (minutes < 60) return `${minutes}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    return `${days}d ago`;
+};
+
 // async function to fetch data from the API
 const fetchData = async () => {
     try{
