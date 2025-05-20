@@ -9,7 +9,7 @@ const postsContainer = document.getElementById("posts-container");
 const timeAgo = time => {
     const currentTime = new Date();
     const lastPost = new Date(time);
-    
+
     const minutes = Math.floor((currentTime - lastPost) / 60000);
     const hours = Math.floor((currentTime - lastPost) / 3600000);
     const days = Math.floor((currentTime - lastPost) / 86400000);
@@ -17,6 +17,11 @@ const timeAgo = time => {
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
     return `${days}d ago`;
+};
+
+// function to convert view counts
+const viewCount = views => {
+    return (views >= 1000) ? `${Math.floor(views / 1000)}k` : views;
 };
 
 // async function to fetch data from the API
@@ -47,7 +52,7 @@ const showLatestPosts = data => {
                 <td></td>
                 <td>${posts_count - 1}</td>
                 <td>${views}</td>
-                <td></td>
+                <td>${timeAgo(bumped_at)}</td>
             </tr>
         `;
     }).join("");
