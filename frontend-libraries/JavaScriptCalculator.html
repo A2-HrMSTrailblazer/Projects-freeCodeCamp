@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript Calculator</title>
+  <link rel="stylesheet" href="JavaScriptCalculator.css" />
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <script type="text/babel">
+    class Calculator extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        formula: '',
+        display: '0',
+        evaluated: false
+      };
+      this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick(e) {
+      const value = e.target.value;
+      let { formula, display, evaluated } = this.state;
+
+      const endsWithOp = /[+\-*/]$/;
+      const endsWithNegative = /[-]$/;
+
+      if ('0123456789'.includes(value)) {
+        if (evaluated) {
+          formula = value;
+          display = value;
+          evaluated = false;
+        } else {
+          if (display === '0' || endsWithOp.test(display)) {
+            display = value;
+          } else {
+            display += value;
+          }
+          formula += value;
+        }
+      } else if (value === '.') {
+        if (evaluated) {
+          display = '0.';
+          formula = '0.';
+          evaluated = false;
+        } else if (!display.includes('.')) {
+          display += '.';
+          formula += '.';
+        }
+      } else if ('+-*/'.includes(value)) {
+        evaluated = false;
+        if (!formula || endsWithOp.test(formula)) {
+          if (value === '-') {
+            formula += value;
+            display = value;
+          } else {
+            formula = formula.slice(0, -1) + value;
+            display = value;
+          }
+        } else {
+          formula += value;
+          display = value;
+        }
+      } else if (value === 'clear') {
+        formula = '';
+        display = '0';
+        evaluated = false;
+      } else if (value === '=') {
+        let exp = formula;
+        if (endsWithOp.test(exp)) {
+          exp = exp.slice(0, -1);
+        }
+        try {
+          const result = Math.round(100000 * eval(exp)) / 100000;
+          display = result.toString();
+          formula = result.toString();
+          evaluated = true;
+        } catch {
+          display = 'Error';
+        }
+      }
+
+      this.setState({ formula, display, evaluated });
+    }
+
+    render() {
+      return (
+        <div id="calculator">
+          <div id="display">{this.state.display}</div>
+          <div>
+            {['seven','eight','nine'].map((id,val)=>
+              <button key={id} id={id} value={String(val+7)} onClick={this.handleClick} className="btn">{String(val+7)}</button>
+            )}
+            <button id="divide" className="btn operator" value="/" onClick={this.handleClick}>/</button>
+          </div>
+          <div>
+            {['four','five','six'].map((id,val)=>
+              <button key={id} id={id} value={String(val+4)} onClick={this.handleClick} className="btn">{String(val+4)}</button>
+            )}
+            <button id="multiply" className="btn operator" value="*" onClick={this.handleClick}>*</button>
+          </div>
+          <div>
+            {['one','two','three'].map((id,val)=>
+              <button key={id} id={id} value={String(val+1)} onClick={this.handleClick} className="btn">{String(val+1)}</button>
+            )}
+            <button id="subtract" className="btn operator" value="-" onClick={this.handleClick}>-</button>
+          </div>
+          <div>
+            <button id="zero" value="0" onClick={this.handleClick} className="btn zero">0</button>
+            <button id="decimal" value="." onClick={this.handleClick} className="btn decimal">.</button>
+            <button id="equals" value="=" onClick={this.handleClick} className="btn equals">=</button>
+            <button id="add" className="btn operator" value="+" onClick={this.handleClick}>+</button>
+          </div>
+          <div>
+            <button id="clear" value="clear" onClick={this.handleClick} className="btn">AC</button>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<Calculator />);
+</script>
+
+</body>
+
+</html>

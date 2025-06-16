@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>25 + 5 Clock</title>
+
+  <!-- ========  Minimal styling, no Tailwind  ======== -->
+  <link rel="stylesheet" href="TwentyFivePlusFiveClock.css">
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <!-- =========  React & Babel UMD  ========= -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <!-- =========  Application (JSX)  ========= -->
+  <script type="text/babel">
+    const {useState, useRef, useEffect} = React;
+
+    function App(){
+      
+      const [breakLen,   setBreakLen]   = useState(5);      // minutes
+      const [sessLen,    setSessLen]    = useState(25);     // minutes
+      const [timeLeft,   setTimeLeft]   = useState(25*60);  // seconds
+      const [mode,       setMode]       = useState("Session"); // "Session" | "Break"
+      const [running,    setRunning]    = useState(false);
+      const intervalRef = useRef(null);
+      const beepRef     = useRef(null);
+
+      /* ----------  helpers ---------- */
+      const fmt = (s) => {
+        const m = Math.floor(s/60).toString().padStart(2,"0");
+        const sec = (s%60).toString().padStart(2,"0");
+        return `${m}:${sec}`;
+      };
+
+      
+      const changeLen = (type, delta) => {
+        if (running) return;                           // lock lengths while running
+        if (type==="break"){
+          setBreakLen(l => {
+            const n = l+delta;
+            return (n>=1 && n<=60)? n : l;
+          });
+        } else {
+          setSessLen(l => {
+            const n = l+delta;
+            if (n<1 || n>60) return l;
+            setTimeLeft(n*60);                        // sync clock when session len changes
+            return n;
+          });
+        }
+      };
+
+      /* ----------  tick ---------- */
+      useEffect(()=>{
+        if (running){
+          intervalRef.current = setInterval(()=>{
+            setTimeLeft(t => {
+              if (t===0){
+                beepRef.current.play();
+                // switch mode
+                if (mode==="Session"){
+                  setMode("Break");
+                  return breakLen*60;
+                } else {
+                  setMode("Session");
+                  return sessLen*60;
+                }
+              }
+              return t-1;
+            });
+          }, 1000);
+        } else {
+          clearInterval(intervalRef.current);
+        }
+        // cleanup on mode/running change
+        return ()=> clearInterval(intervalRef.current);
+      }, [running, mode, breakLen, sessLen]);
+
+      /* ----------  controls ---------- */
+      const startStop = ()=> setRunning(r => !r);
+
+      const reset = ()=> {
+        clearInterval(intervalRef.current);
+        setBreakLen(5);
+        setSessLen(25);
+        setTimeLeft(25*60);
+        setMode("Session");
+        setRunning(false);
+        const beep = beepRef.current;
+        beep.pause();
+        beep.currentTime = 0;
+      };
+
+      {/* ----------  view ---------- */}
+      return (
+        <div id="clock">
+          <h1>25 + 5 Clock</h1>
+
+          {/* ------- Length Controls ------- */}
+          <div className="length-control">
+            <div id="break-label">Break Length</div>
+            <button id="break-decrement" onClick={()=>changeLen("break",-1)}>−</button>
+            <div id="break-length">{breakLen}</div>
+            <button id="break-increment" onClick={()=>changeLen("break",1)}>+</button>
+          </div>
+
+          <div className="length-control">
+            <div id="session-label">Session Length</div>
+            <button id="session-decrement" onClick={()=>changeLen("session",-1)}>−</button>
+            <div id="session-length">{sessLen}</div>
+            <button id="session-increment" onClick={()=>changeLen("session",1)}>+</button>
+          </div>
+
+          {/* ------- Timer ------- */}
+          <div id="timer-label">{mode}</div>
+          <div id="time-left">{fmt(timeLeft)}</div>
+
+          {/* ------- Start / Reset ------- */}
+          <div id="controls">
+            <button id="start_stop" onClick={startStop}>
+              {running? "Pause":"Start"}
+            </button>
+            <button id="reset" onClick={reset}>Reset</button>
+          </div>
+
+          {/* ------- Beep ------- */}
+          <audio
+            id="beep"
+            ref={beepRef}
+            preload="auto"
+            src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/BeepSound.mp3">
+          </audio>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+
+</html>

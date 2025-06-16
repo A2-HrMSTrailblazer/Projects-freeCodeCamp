@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Quote Machine</title>
+  <link rel="stylesheet" href="RandomQuoteMachine.css" />
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <!-- JSX App Code -->
+  <script type="text/babel">
+    const quotes = [
+      { text: "The mind is everything. What you think you become.", author: "Buddha" },
+      { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
+      { text: "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.", author: "Albert Einstein" },
+      { text: "So many books, so little time.", author: "Frank Zappa" },
+      { text: "A room without books is like a body without a soul.", author: "Marcus Tullius Cicero" },
+      { text: "Be the change that you wish to see in the world.", author: "Mahatma Gandhi" },
+      { text: "If you tell the truth, you don't have to remember anything.", author: "Mark Twain" }
+    ];
+
+    function getRandomQuote() {
+      return quotes[Math.floor(Math.random() * quotes.length)];
+    }
+
+    function QuoteBox() {
+      const [quote, setQuote] = React.useState(getRandomQuote());
+
+      const handleNewQuote = () => {
+        setQuote(getRandomQuote());
+      };
+
+      return (
+        <div id="quote-box">
+          <div id="text">"{quote.text}"</div>
+          <div id="author">- {quote.author}</div>
+          <button id="new-quote" onClick={handleNewQuote}>New Quote</button>
+          <a
+            id="tweet-quote"
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`"${quote.text}" - ${quote.author}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Tweet
+          </a>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<QuoteBox />);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="MarkdownPreviewer.css">
+  <title>Markdown Previewer</title>
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <!-- Marked.js for Markdown parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+
+  <!-- JSX Code -->
+  <script type="text/babel">
+
+    const defaultMarkdown = `
+# Welcome to my Markdown Previewer!
+
+## This is a sub-heading...
+### Here's some other cool stuff:
+
+You can write inline code, like \`<div></div>\`, or blocks:
+
+\`\`\`js
+function greet(name) {
+  return "Hello, " + name + "!";
+}
+\`\`\`
+
+You can also make lists:
+- Item one
+- Item two
+- Item three
+
+> Block quotes are awesome!
+
+You can **bold text**, _italicize_, or do both.
+
+Here's a [link to freeCodeCamp](https://www.freecodecamp.org).
+
+And here's an image:
+
+![React Logo](https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg)
+`;
+
+    marked.setOptions({
+      breaks: true
+    });
+
+    function MarkdownPreviewer() {
+      const [text, setText] = React.useState(defaultMarkdown);
+
+      const handleChange = (e) => {
+        setText(e.target.value);
+      };
+
+      return (
+        <div id="container">
+          <h2>Markdown Editor</h2>
+          <textarea
+            id="editor"
+            value={text}
+            onChange={handleChange}
+          />
+          <h2>Preview</h2>
+          <div
+            id="preview"
+            dangerouslySetInnerHTML={{ __html: marked.parse(text) }}
+          />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<MarkdownPreviewer />);
+  </script>
+</body>
+
+</html>

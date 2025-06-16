@@ -1,0 +1,88 @@
+:root {
+  --bg: #282c34;
+  --panel: #3b3f46;
+  --btn: #4f545c;
+  --accent: #00d1b2;
+  --font: "Segoe UI", Arial, sans-serif;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: var(--bg);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font);
+}
+#clock {
+  background: var(--panel);
+  padding: 2rem;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+  display: grid;
+  gap: 1.5rem;
+}
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+.length-control {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  gap: 0.25rem;
+}
+button {
+  background: var(--btn);
+  border: none;
+  color: #fff;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+button:active {
+  background: var(--accent);
+}
+#time-left {
+  font-size: 3rem;
+  font-weight: 600;
+  margin: 0.25rem 0;
+}
+#controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* --- FIX: keep label, – , value, + in one row --- */
+.length-control{
+  display:grid;
+  /*  auto  = label grows just as much as it needs
+      40px  = width for each button and the number box   */
+  grid-template-columns:auto 40px 40px 40px; 
+  align-items:center;          /* vertical centering   */
+  justify-content:center;      /* center whole row     */
+  column-gap:.5rem;            /* little breathing room*/
+}
+
+/* optional (makes the number look centred & bold) */
+#break-length,
+#session-length{
+  text-align:center;
+  font-weight:600;
+}
+
+/* optional (uniform button size) */
+.length-control button{
+  width:40px;
+  height:40px;
+  font-size:1.4rem;
+}
+

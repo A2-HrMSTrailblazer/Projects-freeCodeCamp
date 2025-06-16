@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Drum Machine</title>
+  <link rel="stylesheet" href="DrumMachine.css" />
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <!-- React, ReactDOM, Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <!-- JSX Script -->
+  <script type="text/babel">
+    const bank = [
+      { key: "Q", id: "Heater-1", src: "https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3" },
+      { key: "W", id: "Heater-2", src: "https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3" },
+      { key: "E", id: "Heater-3", src: "https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3" },
+      { key: "A", id: "Heater-4", src: "https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3" },
+      { key: "S", id: "Clap", src: "https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3" },
+      { key: "D", id: "Open-HH", src: "https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3" },
+      { key: "Z", id: "Kick-n'-Hat", src: "https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3" },
+      { key: "X", id: "Kick", src: "https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3" },
+      { key: "C", id: "Closed-HH", src: "https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3" }
+    ];
+
+    class DrumMachine extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          currentClip: ""
+        };
+        this.playSound = this.playSound.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
+      }
+
+      componentDidMount() {
+        document.addEventListener("keydown", this.handleKeyPress);
+      }
+
+      componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleKeyPress);
+      }
+
+      handleKeyPress(e) {
+        const key = e.key.toUpperCase();
+        const audio = document.getElementById(key);
+        const pad = bank.find(p => p.key === key);
+        if (audio && pad) {
+          audio.currentTime = 0;
+          audio.play();
+          this.setState({ currentClip: pad.id });
+        }
+      }
+
+      playSound(key, id) {
+        const audio = document.getElementById(key);
+        audio.currentTime = 0;
+        audio.play();
+        this.setState({ currentClip: id });
+      }
+
+      render() {
+        return (
+          <div id="drum-machine">
+            <div id="display">{this.state.currentClip || "Press a key"}</div>
+            <div className="pad-grid">
+              {bank.map(clip => (
+                <button
+                  key={clip.key}
+                  id={clip.id}
+                  className="drum-pad"
+                  onClick={() => this.playSound(clip.key, clip.id)}
+                >
+                  {clip.key}
+                  <audio
+                    className="clip"
+                    id={clip.key}
+                    src={clip.src}
+                  ></audio>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<DrumMachine />);
+  </script>
+</body>
+
+</html>
