@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Choropleth Map</title>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="https://d3js.org/topojson.v2.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .county {
+      stroke: #fff;
+      stroke-width: 0.5;
+    }
+    .legend rect {
+      stroke: black;
+      stroke-width: 1;
+    }
+    #tooltip {
+      position: absolute;
+      background-color: white;
+      padding: 5px;
+      border: 1px solid black;
+      border-radius: 5px;
+      pointer-events: none;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">United States Educational Attainment</h1>
+  <p id="description">Percentage of adults age 25 and older with a bachelor's degree or higher (2010-2014)</p>
+  <svg id="choropleth" width="960" height="600"></svg>
+  <div id="tooltip"></div>
+  <svg id="legend" width="300" height="50"></svg>
+
+  <script>
+    const width = 960;
+    const height = 600;
+    const svg = d3.select("#choropleth");
+    const tooltip = d3.select("#tooltip");
+
+    const path = d3.geoPath();
+
+    const color = d3.scaleThreshold()
+      .domain([10, 20, 30, 40])
+      .range(["#d4eeff", "#99ccff", "#3399ff", "#0066cc", "#003366"]);
+
+    Promise.all([
+      d3.json("https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json"),
+      d3.json("https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json")
+    ]).then(([us, education]) => {
+      const eduMap = new Map(education.map(d => [d.fips, d]));
+
+      svg.append("g")
+        .selectAll("path")
+        .data(topojson.feature(us, us.objects.counties).features)
+        .join("path")
+        .attr("class", "county")
+        .attr("d", path)
+        .attr("data-fips", d => d.id)
+        .attr("data-education", d => eduMap.get(d.id)?.bachelorsOrHigher || 0)
+        .attr("fill", d => color(eduMap.get(d.id)?.bachelorsOrHigher || 0))
+        .on("mouseover", function (event, d) {
+          const data = eduMap.get(d.id);
+          tooltip.style("opacity", 1)
+            .style("left", event.pageX + 10 + "px")
+            .style("top", event.pageY - 20 + "px")
+            .attr("data-education", data?.bachelorsOrHigher || 0)
+            .html(`${data?.area_name}, ${data?.state}: ${data?.bachelorsOrHigher}%`);
+        })
+        .on("mouseout", () => tooltip.style("opacity", 0));
+
+      const legend = d3.select("#legend");
+      const legendColors = color.range();
+      const legendX = d3.scaleLinear().domain([0, 40]).range([0, 240]);
+
+      legend.selectAll("rect")
+        .data(legendColors)
+        .join("rect")
+        .attr("x", (d, i) => i * 60)
+        .attr("y", 10)
+        .attr("width", 60)
+        .attr("height", 20)
+        .attr("fill", d => d);
+
+      legend.selectAll("text")
+        .data(["0%", "10%", "20%", "30%", "40%+"])
+        .join("text")
+        .attr("x", (d, i) => i * 60 + 5)
+        .attr("y", 45)
+        .text(d => d);
+    });
+  </script>
+</body>
+</html>

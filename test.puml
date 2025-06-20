@@ -1,0 +1,48 @@
+@startuml
+!define RECTANGLE class
+!define ARROW -[hidden]->
+
+skinparam backgroundColor #F5F5F5
+skinparam titleFontSize 16
+skinparam defaultFontSize 12
+
+title Slow Living vs. Hustle Culture: Which Lifestyle Wins?
+
+' Slide Structure
+rectangle "Slide" as Slide {
+  ' Title Section
+  RECTANGLE "Slow Living vs. Hustle Culture: Which Lifestyle Wins?" as Title #White
+
+  ' Main Content (Split Columns)
+  together {
+    RECTANGLE "Pro-Slow Living\n- Mental Health: Reduces stress (WHO 2023)\n- Sustainability: Lowers carbon footprint\n- Fulfillment: Focus on relationships\n[Tree Icon]" as SlowLiving #LightGreen
+    
+    RECTANGLE "Pro-Hustle Culture\n- Innovation: Fuels progress (tech boom)\n- Economic Growth: Boosts GDP (U.S. 2024 stats)\n- Personal Growth: Builds resilience\n[Gear Icon]" as HustleCulture #LightBlue
+  }
+
+  ' Central Graphic
+  RECTANGLE "[Central Scale Graphic: Feather vs. Gear]" as CentralGraphic #White
+
+  ' Engagement Prompt
+  RECTANGLE "Which do you value more: presence or progress? [?]" as Prompt #LightGray
+
+  ' Footer
+  RECTANGLE "Debate Date: May 25, 2025 | Sources: WHO, UN, 2024-2025" as Footer #Gray
+}
+
+' Layout Connections
+Title -[hidden]-> SlowLiving
+SlowLiving -[hidden]-> HustleCulture
+HustleCulture -[hidden]-> CentralGraphic
+CentralGraphic -[hidden]-> Prompt
+Prompt -[hidden]-> Footer
+
+' Color Coding
+skinparam class {
+  BackgroundColor<<SlowLiving>> LightGreen
+  BackgroundColor<<HustleCulture>> LightBlue
+  BackgroundColor<<Prompt>> LightGray
+  BackgroundColor<<Footer>> Gray
+}
+
+@enduml

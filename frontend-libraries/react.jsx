@@ -1,9 +1,23 @@
-const MyComponent = function() {
-  // Change code below this line
+const ChildComponent = () => {
   return (
     <div>
-        blah blah blah
+      <p>I am the child</p>
     </div>
   );
-  // Change code above this line
-}
+};
+
+class ParentComponent extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div>
+        <h1>I am the parent</h1>
+        { /* Change code below this line */ }
+        <ChildComponent />
+        { /* Change code above this line */ }
+      </div>
+    );
+  }
+};
