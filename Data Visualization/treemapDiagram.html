@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Treemap Diagram</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body { font-family: sans-serif; }
+    .tile { stroke: white; stroke-width: 1; }
+    #tooltip {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 6px;
+      border-radius: 4px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    #legend rect {
+      stroke: black;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">Movie Sales</h1>
+  <p id="description">Top 100 highest grossing movies grouped by genre</p>
+  <div id="tooltip"></div>
+  <svg id="treemap" width="960" height="570"></svg>
+  <svg id="legend" width="500" height="100"></svg>
+
+  <script>
+    const svg = d3.select("#treemap");
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
+    const tooltip = d3.select("#tooltip");
+
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    const treemap = d3.treemap()
+      .size([width, height])
+      .padding(1);
+
+    d3.json("https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json").then(data => {
+      const root = d3.hierarchy(data)
+        .sum(d => d.value)
+        .sort((a, b) => b.value - a.value);
+
+      treemap(root);
+
+      const tile = svg.selectAll("g")
+        .data(root.leaves())
+        .join("g")
+        .attr("transform", d => `translate(${d.x0},${d.y0})`);
+
+      tile.append("rect")
+        .attr("class", "tile")
+        .attr("data-name", d => d.data.name)
+        .attr("data-category", d => d.data.category)
+        .attr("data-value", d => d.data.value)
+        .attr("width", d => d.x1 - d.x0)
+        .attr("height", d => d.y1 - d.y0)
+        .attr("fill", d => color(d.data.category))
+        .on("mousemove", (event, d) => {
+          tooltip.style("opacity", 1)
+            .attr("data-value", d.data.value)
+            .html(`Name: ${d.data.name}<br>Category: ${d.data.category}<br>Value: $${d.data.value}`)
+            .style("left", `${event.pageX + 10}px`)
+            .style("top", `${event.pageY - 28}px`);
+        })
+        .on("mouseout", () => tooltip.style("opacity", 0));
+
+      tile.append("text")
+        .selectAll("tspan")
+        .data(d => d.data.name.split(/(?=[A-Z][^A-Z])/g))
+        .join("tspan")
+        .attr("x", 4)
+        .attr("y", (d, i) => 13 + i * 10)
+        .text(d => d)
+        .attr("font-size", "10px");
+
+      const categories = [...new Set(root.leaves().map(d => d.data.category))];
+      const legend = d3.select("#legend");
+
+      const legendItem = legend.selectAll("g")
+        .data(categories)
+        .join("g")
+        .attr("transform", (d, i) => `translate(${i * 100},0)`);
+
+      legendItem.append("rect")
+        .attr("class", "legend-item")
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("fill", d => color(d));
+
+      legendItem.append("text")
+        .attr("x", 25)
+        .attr("y", 15)
+        .text(d => d);
+    });
+  </script>
+</body>
+</html>
