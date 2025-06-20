@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GDP Bar Chart</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    .bar {
+      fill: steelblue;
+    }
+    .bar:hover {
+      fill: darkorange;
+    }
+    .tick text {
+      font-size: 12px;
+    }
+    #tooltip {
+      position: absolute;
+      background: #fff;
+      padding: 5px;
+      border: 1px solid #333;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">United States GDP (Bar Chart)</h1>
+  <svg width="900" height="500"></svg>
+  <div id="tooltip"></div>
+  <script>
+    const data = [
+      { date: "2000-01-01", gdp: 10000 },
+      { date: "2001-01-01", gdp: 10500 },
+      { date: "2002-01-01", gdp: 9800 },
+      { date: "2003-01-01", gdp: 11000 },
+      { date: "2004-01-01", gdp: 12000 },
+      { date: "2005-01-01", gdp: 13000 },
+      { date: "2006-01-01", gdp: 14000 },
+      { date: "2007-01-01", gdp: 14500 },
+      { date: "2008-01-01", gdp: 13000 },
+      { date: "2009-01-01", gdp: 12500 }
+    ];
+
+    const svg = d3.select("svg");
+    const margin = { top: 60, right: 30, bottom: 50, left: 60 };
+    const width = +svg.attr("width") - margin.left - margin.right;
+    const height = +svg.attr("height") - margin.top - margin.bottom;
+
+    const x = d3.scaleBand()
+      .domain(data.map(d => d.date))
+      .range([0, width])
+      .padding(0.1);
+
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.gdp)])
+      .nice()
+      .range([height, 0]);
+
+    const g = svg.append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    g.append("g")
+      .attr("id", "x-axis")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x))
+      .selectAll(".tick")
+      .classed("tick", true)
+      .selectAll("text")
+      .attr("transform", "rotate(-45)")
+      .style("text-anchor", "end");
+
+    g.append("g")
+      .attr("id", "y-axis")
+      .call(d3.axisLeft(y))
+      .selectAll(".tick")
+      .classed("tick", true);
+
+    const tooltip = d3.select("#tooltip");
+
+    g.selectAll(".bar")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("class", "bar")
+      .attr("x", d => x(d.date))
+      .attr("y", d => y(d.gdp))
+      .attr("width", x.bandwidth())
+      .attr("height", d => height - y(d.gdp))
+      .attr("data-date", d => d.date)
+      .attr("data-gdp", d => d.gdp)
+      .on("mouseover", (event, d) => {
+        tooltip.transition().style("opacity", 1);
+        tooltip
+          .html(`Date: ${d.date}<br>GDP: $${d.gdp}B`)
+          .attr("data-date", d.date)
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 28 + "px");
+      })
+      .on("mouseout", () => {
+        tooltip.transition().style("opacity", 0);
+      });
+  </script>
+</body>
+</html>
