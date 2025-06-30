@@ -102,7 +102,7 @@
 
 <body>
   <div class="start-screen">
-    <h1 class="main-title">freeCodeCamp Code Warrior</h1>
+    <h1 class="main-title">Platformer</h1>
     <p class="instructions">
       Help the main player navigate to the yellow checkpoints.
     </p>
@@ -123,7 +123,13 @@
 
   <canvas id="canvas"></canvas>
 
-  <script src="./script.js"></script>
+  <script>
+    const startBtn = document.getElementById("start-btn");
+    const canvas = document.getElementById("canvas");
+    const startScreen = document.querySelector(".start-screen");
+    const checkpointScreen = document.querySelector(".checkpoint-screen");
+    const checkpointMessage = document.querySelector(".checkpoint-screen > p");
+  </script>
 </body>
 
 </html>
